@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formation – Chef d'Équipe Tech</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #0d0f14;
+  --surface: #14171f;
+  --surface2: #1a1e28;
+  --border: #232733;
+  --border2: #2e3347;
+  --accent1: #f5a623;
+  --accent2: #4ecdc4;
+  --accent3: #c678dd;
+  --text: #e8eaf0;
+  --muted: #6b7280;
+  --green: #68d391;
+  --red: #fc8181;
+  --gold: #f5a623;
+  --gold-dim: rgba(245,166,35,0.12);
+  --teal-dim: rgba(78,205,196,0.12);
+  --purple-dim: rgba(198,120,221,0.12);
+  --green-dim: rgba(104,211,145,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ─── VIEWS ─── */
+.view { display: none; min-height: 100vh; }
+.view.active { display: block; }
+
+/* ─── NAV ─── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,20,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 52px;
+  display: flex; align-items: center; gap: 16px;
+}
+.nav-back {
+  display: flex; align-items: center; gap: 8px;
+  background: none; border: none; color: var(--muted);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  cursor: pointer; padding: 6px 10px; border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+}
+.nav-back:hover { color: var(--text); background: var(--surface); }
+.nav-back svg { width: 14px; height: 14px; }
+.nav-breadcrumb {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted); letter-spacing: 1px;
+}
+.nav-sep { color: var(--border2); margin: 0 4px; }
+.nav-breadcrumb span:last-child { color: var(--accent2); }
+
+/* ─── HOMEPAGE ─── */
+.home-hero {
+  max-width: 900px; margin: 0 auto;
+  padding: 60px 24px 40px;
+}
+.home-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent1); margin-bottom: 16px;
+}
+.home-hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(34px, 5vw, 56px);
+  line-height: 1.08; margin-bottom: 18px;
+}
+.home-hero h1 em { font-style: italic; color: var(--accent2); }
+.home-hero p {
+  color: var(--muted); font-size: 15px; line-height: 1.75;
+  max-width: 560px; margin-bottom: 32px;
+}
+
+.stats-row {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 56px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 22px; min-width: 110px;
+}
+.stat-card .num {
+  font-family: 'DM Mono', monospace; font-size: 26px; font-weight: 500;
+  color: var(--accent1); line-height: 1;
+}
+.stat-card .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* Global progress bar */
+.global-prog {
+  max-width: 900px; margin: 0 auto 48px; padding: 0 24px;
+}
+.prog-header {
+  display: flex; justify-content: space-between;
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted); margin-bottom: 8px;
+}
+.prog-bar {
+  height: 5px; background: var(--surface); border-radius: 999px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  width: 0%;
+}
+
+/* Phase cards grid */
+.phases-grid {
+  max-width: 900px; margin: 0 auto; padding: 0 24px 80px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.phase-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.phase-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+.phase-card.status-active { border-color: var(--accent2); }
+.phase-card.status-done { border-color: var(--green); }
+.phase-card.status-locked { opacity: 0.55; }
+
+.phase-card-top {
+  padding: 22px 24px 18px;
+  display: flex; align-items: flex-start; gap: 18px;
+}
+.phase-badge {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 999px; white-space: nowrap; flex-shrink: 0;
+}
+.pb-1 { background: var(--gold-dim); color: var(--accent1); }
+.pb-2 { background: var(--teal-dim); color: var(--accent2); }
+.pb-3 { background: var(--purple-dim); color: var(--accent3); }
+.pb-4 { background: var(--green-dim); color: var(--green); }
+
+.phase-card-info { flex: 1; }
+.phase-card-info h2 {
+  font-family: 'DM Serif Display', serif; font-size: 20px;
+  margin-bottom: 5px; line-height: 1.2;
+}
+.phase-card-info .phase-meta {
+  font-size: 13px; color: var(--muted);
+}
+.phase-card-status {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+}
+.phase-months-tag {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted);
+}
+.phase-prog-mini {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+}
+.mini-bar {
+  width: 60px; height: 4px; background: var(--border);
+  border-radius: 999px; overflow: hidden;
+}
+.mini-fill {
+  height: 100%; border-radius: 999px; background: var(--green);
+  transition: width 0.4s;
+}
+
+.phase-card-bottom {
+  padding: 0 24px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  flex-wrap: wrap;
+}
+.phase-modules-preview {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.module-chip {
+  font-size: 11px; color: var(--muted);
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px 8px;
+}
+.module-chip.done { border-color: var(--green); color: var(--green); }
+
+.btn-phase {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500;
+  padding: 9px 18px; border-radius: 10px; cursor: pointer;
+  transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+  text-decoration: none;
+}
+.btn-phase:hover { background: var(--accent2); border-color: var(--accent2); color: #0d0f14; }
+.btn-phase.locked { cursor: not-allowed; opacity: 0.5; }
+.btn-phase svg { width: 14px; height: 14px; transition: transform 0.15s; }
+.btn-phase:hover svg { transform: translateX(2px); }
+
+/* ─── PHASE DETAIL VIEW ─── */
+.phase-hero {
+  padding: 48px 24px 40px;
+  position: relative; overflow: hidden;
+}
+.phase-hero::after {
+  content: attr(data-num);
+  position: absolute; right: 32px; top: -16px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 160px; line-height: 1;
+  color: rgba(255,255,255,0.025);
+  pointer-events: none;
+}
+.phase-hero-inner { max-width: 860px; margin: 0 auto; }
+.phase-hero-tag {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent1); margin-bottom: 14px;
+}
+.phase-hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 4vw, 44px); line-height: 1.1;
+  margin-bottom: 14px;
+}
+.phase-hero h1 em { font-style: italic; color: var(--accent2); }
+.phase-hero p {
+  color: var(--muted); font-size: 15px; line-height: 1.75;
+  max-width: 580px; margin-bottom: 24px;
+}
+.phase-pills {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.pill {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px; padding: 6px 14px;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.6);
+}
+
+/* Phase progress */
+.phase-prog-bar {
+  max-width: 860px; margin: 0 auto 40px; padding: 0 24px;
+}
+
+/* Modules list */
+.modules-list {
+  max-width: 860px; margin: 0 auto; padding: 0 24px 80px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+/* Module detail card */
+.mod-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; overflow: hidden;
+}
+.mod-card.mod-done { border-color: var(--green); }
+
+.mod-card-header {
+  padding: 22px 24px 18px;
+  display: flex; gap: 16px; align-items: flex-start;
+  border-bottom: 1px solid var(--border);
+}
+.mod-num {
+  font-family: 'DM Mono', monospace; font-size: 12px;
+  color: var(--muted); padding-top: 3px; flex-shrink: 0; width: 32px;
+}
+.mod-title-wrap { flex: 1; }
+.mod-title {
+  font-size: 17px; font-weight: 600; margin-bottom: 5px; line-height: 1.3;
+}
+.mod-subtitle { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+.mod-chips { display: flex; gap: 7px; flex-wrap: wrap; }
+.mod-chip {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 3px 9px; border-radius: 999px;
+}
+.mc-dur { background: var(--gold-dim); color: var(--accent1); }
+.mc-lvl { background: var(--teal-dim); color: var(--accent2); }
+.mc-type { background: var(--purple-dim); color: var(--accent3); }
+
+.mod-check-btn {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--border2); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; margin-top: 2px;
+  color: transparent;
+}
+.mod-check-btn svg { width: 14px; height: 14px; }
+.mod-card.mod-done .mod-check-btn {
+  background: var(--green); border-color: var(--green); color: var(--bg);
+}
+.mod-check-btn:hover:not(:disabled) {
+  border-color: var(--green); transform: scale(1.1);
+}
+
+/* Accordion body */
+.mod-body { display: none; }
+.mod-body.open { display: block; }
+.mod-body-inner { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+
+.mod-toggle-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none; color: var(--muted);
+  font-family: 'DM Sans', sans-serif; font-size: 13px;
+  cursor: pointer; padding: 8px 0; transition: color 0.15s;
+}
+.mod-toggle-btn:hover { color: var(--text); }
+.mod-toggle-btn svg { width: 14px; height: 14px; transition: transform 0.2s; }
+.mod-body.open + .mod-footer .mod-toggle-btn svg { transform: rotate(180deg); }
+
+.mod-footer {
+  padding: 0 24px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Section label */
+.slabel {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 12px;
+}
+
+/* Objectives */
+.objectives { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: 10px; }
+.obj {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; line-height: 1.5; display: flex; gap: 8px;
+}
+.obj-ic { flex-shrink: 0; }
+
+/* Weeks table */
+.weeks-table {
+  border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.week-row {
+  display: flex; border-bottom: 1px solid var(--border);
+}
+.week-row:last-child { border-bottom: none; }
+.week-lbl {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--muted); padding: 12px 14px; width: 72px;
+  flex-shrink: 0; background: var(--bg); border-right: 1px solid var(--border);
+  display: flex; align-items: center;
+}
+.week-content {
+  padding: 12px 16px; font-size: 13px; line-height: 1.6; flex: 1;
+}
+.week-content strong { font-weight: 600; }
+.wtag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 2px 6px; border-radius: 4px; margin-left: 6px;
+}
+.wt-th { background: rgba(78,205,196,0.15); color: var(--accent2); }
+.wt-pr { background: rgba(245,166,35,0.15); color: var(--accent1); }
+.wt-pj { background: rgba(198,120,221,0.15); color: var(--accent3); }
+
+/* Resources */
+.resources { display: flex; flex-direction: column; gap: 8px; }
+.res {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--bg);
+  transition: border-color 0.15s;
+}
+.res:hover { border-color: var(--border2); }
+.res-ico { font-size: 16px; flex-shrink: 0; }
+.res-info { flex: 1; }
+.res-name { font-size: 13px; font-weight: 500; }
+.res-desc { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.res-tag {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 3px 8px; border-radius: 999px; white-space: nowrap;
+}
+.rt-free { background: var(--teal-dim); color: var(--accent2); }
+.rt-paid { background: rgba(252,129,129,0.15); color: var(--red); }
+
+/* Exercise box */
+.exercise-box {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 20px;
+}
+.ex-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.ex-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+.ex-steps { display: flex; flex-direction: column; gap: 7px; }
+.ex-step {
+  display: flex; gap: 10px; font-size: 13px; color: var(--muted); align-items: flex-start;
+}
+.ex-step-n {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  background: var(--gold-dim); color: var(--accent1);
+  padding: 2px 7px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;
+}
+
+/* Tip box */
+.tip-box {
+  background: var(--gold-dim); border-left: 3px solid var(--accent1);
+  border-radius: 0 10px 10px 0; padding: 14px 16px;
+  font-size: 13px; color: #d4a84b; line-height: 1.7;
+}
+.tip-box strong { color: var(--accent1); }
+
+/* ─── NOTES ─── */
+.notes-section { padding: 0 24px 32px; max-width: 860px; margin: 0 auto; }
+.notes-label {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  font-size: 12px; color: var(--muted);
+}
+.notes-label svg { width: 13px; height: 13px; }
+textarea.notes-area {
+  width: 100%; min-height: 90px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px;
+  line-height: 1.6; resize: vertical; transition: border-color 0.15s;
+}
+textarea.notes-area:focus { outline: none; border-color: var(--border2); }
+textarea.notes-area::placeholder { color: var(--muted); }
+.notes-saved {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--green); margin-top: 5px; opacity: 0; transition: opacity 0.3s;
+}
+.notes-saved.show { opacity: 1; }
+
+/* ─── CHECKLIST recap ─── */
+.checklist-section {
+  max-width: 860px; margin: 0 auto; padding: 0 24px 60px;
+}
+.checklist-card {
+  background: var(--surface); border: 2px solid var(--border2);
+  border-radius: 18px; padding: 28px;
+}
+.checklist-card h3 {
+  font-family: 'DM Serif Display', serif; font-size: 20px;
+  margin-bottom: 6px;
+}
+.checklist-card p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.check-list { display: flex; flex-direction: column; gap: 8px; }
+.check-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 10px;
+  border: 1px solid var(--border); cursor: pointer;
+  user-select: none; transition: background 0.15s, border-color 0.15s;
+}
+.check-item:hover { background: var(--surface2); }
+.check-item.ci-done { background: var(--green-dim); border-color: var(--green); }
+.check-box {
+  width: 20px; height: 20px; border-radius: 5px;
+  border: 2px solid var(--border2); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: transparent; transition: all 0.15s;
+}
+.check-item.ci-done .check-box { background: var(--green); border-color: var(--green); color: var(--bg); }
+.check-text { font-size: 13px; }
+.check-item.ci-done .check-text { color: var(--green); text-decoration: line-through; }
+
+/* ─── COMING SOON PHASE ─── */
+.coming-soon {
+  max-width: 860px; margin: 60px auto; padding: 0 24px;
+  text-align: center;
+}
+.coming-soon-box {
+  background: var(--surface); border: 1px dashed var(--border2);
+  border-radius: 20px; padding: 60px 40px;
+}
+.coming-soon-box .cs-icon { font-size: 48px; margin-bottom: 20px; }
+.coming-soon-box h2 {
+  font-family: 'DM Serif Display', serif; font-size: 26px;
+  margin-bottom: 12px;
+}
+.coming-soon-box p { color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 400px; margin: 0 auto; }
+
+/* ─── UTILITY ─── */
+.divider {
+  display: flex; align-items: center; gap: 16px;
+  margin: 8px 0;
+}
+.div-line { flex: 1; height: 1px; background: var(--border); }
+.div-lbl {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+}
+
+.reset-btn {
+  display: block; margin: 0 auto;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--muted); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 9px 22px; border-radius: 999px;
+  cursor: pointer; transition: all 0.2s;
+}
+.reset-btn:hover { border-color: var(--muted); color: var(--text); }
+
+@media (max-width: 600px) {
+  .phase-card-top { flex-wrap: wrap; }
+  .phase-card-status { flex-direction: row; align-items: center; }
+  .mod-card-header { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     VIEW: HOMEPAGE
+════════════════════════════════════════════════ -->
+<div class="view active" id="view-home">
+
+  <div class="home-hero">
+    <div class="home-eyebrow">Plan autodidacte · 2h/semaine · 12 mois</div>
+    <h1>De Chef Projet<br><em>à Chef d'Équipe Tech</em></h1>
+    <p>Un parcours structuré pour acquérir les bases techniques solides et les compétences de leadership pour manager des ingénieurs et des développeurs.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">~96h</div><div class="lbl">de formation totale</div></div>
+      <div class="stat-card"><div class="num">4</div><div class="lbl">phases clés</div></div>
+      <div class="stat-card"><div class="num" id="home-total-mods">22</div><div class="lbl">modules & projets</div></div>
+      <div class="stat-card"><div class="num" id="home-done-count">0</div><div class="lbl">modules terminés</div></div>
+    </div>
+  </div>
+
+  <div class="global-prog">
+    <div class="prog-header">
+      <span>Progression globale</span>
+      <span id="home-pct">0%</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="home-prog-fill"></div></div>
+  </div>
+
+  <div class="phases-grid">
+
+    <!-- Phase 1 -->
+    <div class="phase-card" id="home-p1">
+      <div class="phase-card-top">
+        <span class="phase-badge pb-1">Phase 1</span>
+        <div class="phase-card-info">
+          <h2>Consolider les fondations</h2>
+          <div class="phase-meta">Python propre · Git · SQL avancé · Bases du web · Projet portfolio</div>
+        </div>
+        <div class="phase-card-status">
+          <span class="phase-months-tag">Mois 1–3</span>
+          <div class="phase-prog-mini">
+            <div class="mini-bar"><div class="mini-fill" id="mini-p1"></div></div>
+            <span id="mini-pct-p1">0%</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-bottom">
+        <div class="phase-modules-preview" id="chips-p1"></div>
+        <button class="btn-phase" onclick="navigate('phase1')">
+          Accéder à la phase
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase-card" id="home-p2">
+      <div class="phase-card-top">
+        <span class="phase-badge pb-2">Phase 2</span>
+        <div class="phase-card-info">
+          <h2>Monter en compétences techniques</h2>
+          <div class="phase-meta">APIs REST · Pandas · No-code · Architecture · Dataviz · Mini-outil web</div>
+        </div>
+        <div class="phase-card-status">
+          <span class="phase-months-tag">Mois 4–7</span>
+          <div class="phase-prog-mini">
+            <div class="mini-bar"><div class="mini-fill" id="mini-p2"></div></div>
+            <span id="mini-pct-p2">0%</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-bottom">
+        <div class="phase-modules-preview" id="chips-p2"></div>
+        <button class="btn-phase" onclick="navigate('phase2')">
+          Accéder à la phase
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase-card" id="home-p3">
+      <div class="phase-card-top">
+        <span class="phase-badge pb-3">Phase 3</span>
+        <div class="phase-card-info">
+          <h2>Posture de leader technique</h2>
+          <div class="phase-meta">Agile/Scrum · Specs & user stories · Management · Sécurité & RGPD</div>
+        </div>
+        <div class="phase-card-status">
+          <span class="phase-months-tag">Mois 8–10</span>
+          <div class="phase-prog-mini">
+            <div class="mini-bar"><div class="mini-fill" id="mini-p3"></div></div>
+            <span id="mini-pct-p3">0%</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-bottom">
+        <div class="phase-modules-preview" id="chips-p3"></div>
+        <button class="btn-phase" onclick="navigate('phase3')">
+          Accéder à la phase
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="phase-card" id="home-p4">
+      <div class="phase-card-top">
+        <span class="phase-badge pb-4">Phase 4</span>
+        <div class="phase-card-info">
+          <h2>Intégrer, consolider et se positionner</h2>
+          <div class="phase-meta">Portfolio GitHub · Veille tech · CV repositionné · Projet capstone</div>
+        </div>
+        <div class="phase-card-status">
+          <span class="phase-months-tag">Mois 11–12</span>
+          <div class="phase-prog-mini">
+            <div class="mini-bar"><div class="mini-fill" id="mini-p4"></div></div>
+            <span id="mini-pct-p4">0%</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-bottom">
+        <div class="phase-modules-preview" id="chips-p4"></div>
+        <button class="btn-phase" onclick="navigate('phase4')">
+          Accéder à la phase
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <div style="text-align:center;padding-bottom:60px;">
+    <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser toute la progression</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     VIEW: PHASE 1
+════════════════════════════════════════════════ -->
+<div class="view" id="view-phase1">
+  <nav class="topnav">
+    <button class="nav-back" onclick="navigate('home')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>
+      Retour
+    </button>
+    <div class="nav-breadcrumb">
+      <span>Formation</span><span class="nav-sep"> › </span><span>Phase 1 — Fondations</span>
+    </div>
+  </nav>
+
+  <div class="phase-hero" data-num="01">
+    <div class="phase-hero-inner">
+      <div class="phase-hero-tag">Phase 1 · Mois 1–3 · Fondations</div>
+      <h1>Consolider les <em>fondations</em></h1>
+      <p>Passer de scripts qui fonctionnent à du code propre, versionné et compréhensible — la base incontournable pour travailler avec des développeurs.</p>
+      <div class="phase-pills">
+        <span class="pill">⏱ ~12 semaines</span>
+        <span class="pill">2h / semaine</span>
+        <span class="pill">~24h au total</span>
+        <span class="pill">5 modules</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-prog-bar">
+    <div class="prog-header">
+      <span>Progression Phase 1</span>
+      <span id="p1-pct">0 / 5 modules</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="p1-fill"></div></div>
+  </div>
+
+  <div class="modules-list">
+
+    <!-- M1 -->
+    <div class="mod-card" id="mod-p1-0">
+      <div class="mod-card-header">
+        <div class="mod-num">M1</div>
+        <div class="mod-title-wrap">
+          <div class="mod-title">Python solide : structures, fonctions, OOP</div>
+          <div class="mod-subtitle">Passer de "ça marche" à du code propre, lisible et maintenable que d'autres peuvent reprendre.</div>
+          <div class="mod-chips">
+            <span class="mod-chip mc-dur">3 semaines</span>
+            <span class="mod-chip mc-lvl">Intermédiaire</span>
+            <span class="mod-chip mc-type">Fondation critique</span>
+          </div>
+        </div>
+        <button class="mod-check-btn" onclick="toggleMod('p1',0,this)" title="Marquer comme terminé">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l4 4 6-7"/></svg>
+        </button>
+      </div>
+      <div class="mod-body" id="body-p1-0">
+        <div class="mod-body-inner">
+          <div>
+            <div class="slabel">Objectifs concrets</div>
+            <div class="objectives">
+              <div class="obj"><span class="obj-ic">🏗️</span>Comprendre les classes et l'OOP pour structurer son code</div>
+              <div class="obj"><span class="obj-ic">🧩</span>Créer des fonctions réutilisables avec paramètres et retours</div>
+              <div class="obj"><span class="obj-ic">⚠️</span>Gérer les erreurs proprement (try/except)</div>
+              <div class="obj"><span class="obj-ic">📦</span>Comprendre les modules et organiser ses fichiers</div>
+              <div class="obj"><span class="obj-ic">🔁</span>Réécrire un script existant de façon propre</div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Programme semaine par semaine</div>
+            <div class="weeks-table">
+              <div class="week-row">
+                <div class="week-lbl">Sem 1</div>
+                <div class="week-content"><strong>Fonctions & portée des variables</strong><span class="wtag wt-th">théorie</span><br>Paramètres, valeurs par défaut, *args/**kwargs. Exercice : refactoriser une fonction longue en sous-fonctions.</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">Sem 2</div>
+                <div class="week-content"><strong>Classes & POO basique</strong><span class="wtag wt-th">théorie</span><br>Attributs, méthodes, héritage simple. Comprendre le concept pour lire le code des autres et utiliser des librairies.</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">Sem 3</div>
+                <div class="week-content"><strong>Gestion d'erreurs + modules + projet</strong><span class="wtag wt-pr">pratique</span><br>try/except/finally, imports propres. Réécrire un de tes vrais scripts avec tout ça.</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Ressources recommandées</div>
+            <div class="resources">
+              <div class="res"><span class="res-ico">🎓</span><div class="res-info"><div class="res-name">Python for Everybody – Coursera (Univ. Michigan)</div><div class="res-desc">Le plus pédagogique. Modules 3 à 5 pour ta cible. Audit gratuit disponible.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+              <div class="res"><span class="res-ico">📖</span><div class="res-info"><div class="res-name">Real Python – realpython.com</div><div class="res-desc">Articles ultra-pratiques. Cherche "OOP Python", "Python functions", "error handling".</div></div><span class="res-tag rt-free">Gratuit</span></div>
+              <div class="res"><span class="res-ico">🏋️</span><div class="res-info"><div class="res-name">Exercism.io – Python track</div><div class="res-desc">Exercices progressifs avec correction. Faire 2-3 exercices par semaine pour ancrer les concepts.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+            </div>
+          </div>
+          <div class="exercise-box">
+            <div class="slabel">🛠 Mini-projet</div>
+            <div class="ex-title">Nettoyer et restructurer un vrai script</div>
+            <div class="ex-desc">Prends un script Python que tu as déjà et réécris-le proprement. Quelqu'un d'autre doit pouvoir le lire sans te demander d'explications.</div>
+            <div class="ex-steps">
+              <div class="ex-step"><span class="ex-step-n">01</span>Découpe en fonctions logiques (une fonction = une action)</div>
+              <div class="ex-step"><span class="ex-step-n">02</span>Ajoute des docstrings à chaque fonction</div>
+              <div class="ex-step"><span class="ex-step-n">03</span>Ajoute une gestion d'erreur sur les parties qui peuvent planter</div>
+              <div class="ex-step"><span class="ex-step-n">04</span>Crée un README.md qui explique à quoi sert le script</div>
+            </div>
+          </div>
+          <div class="tip-box"><strong>💡 Comment utiliser l'IA ici :</strong> Au lieu de demander "écris-moi ce script", demande "explique-moi pourquoi tu as utilisé une classe ici plutôt qu'une fonction". L'IA devient un prof patient plutôt qu'un générateur de code opaque.</div>
+        </div>
+      </div>
+      <div class="mod-footer">
+        <button class="mod-toggle-btn" onclick="toggleBody('p1',0,this)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          Voir le détail
+        </button>
+        <div class="notes-label">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 6h6M5 9h4"/></svg>
+          Notes
+        </div>
+      </div>
+      <div class="notes-section" id="notes-p1-0-wrap" style="display:none">
+        <textarea class="notes-area" id="notes-p1-0" placeholder="Tes notes, questions, liens utiles…" oninput="saveNote('p1',0,this)"></textarea>
+        <div class="notes-saved" id="notes-saved-p1-0">✓ Sauvegardé</div>
+      </div>
+    </div>
+
+    <!-- M2 -->
+    <div class="mod-card" id="mod-p1-1">
+      <div class="mod-card-header">
+        <div class="mod-num">M2</div>
+        <div class="mod-title-wrap">
+          <div class="mod-title">Git & GitHub : versionner son code</div>
+          <div class="mod-subtitle">L'outil le plus important pour travailler avec des développeurs. Pas optionnel.</div>
+          <div class="mod-chips">
+            <span class="mod-chip mc-dur">1 semaine</span>
+            <span class="mod-chip mc-lvl">Débutant</span>
+            <span class="mod-chip mc-type">Priorité absolue</span>
+          </div>
+        </div>
+        <button class="mod-check-btn" onclick="toggleMod('p1',1,this)" title="Marquer comme terminé">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l4 4 6-7"/></svg>
+        </button>
+      </div>
+      <div class="mod-body" id="body-p1-1">
+        <div class="mod-body-inner">
+          <div>
+            <div class="slabel">Objectifs concrets</div>
+            <div class="objectives">
+              <div class="obj"><span class="obj-ic">💾</span>Initialiser un repo, faire des commits clairs</div>
+              <div class="obj"><span class="obj-ic">🌿</span>Créer et merger des branches</div>
+              <div class="obj"><span class="obj-ic">🤝</span>Comprendre les Pull Requests</div>
+              <div class="obj"><span class="obj-ic">📤</span>Pousser son code sur GitHub</div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Programme en 1 semaine</div>
+            <div class="weeks-table">
+              <div class="week-row">
+                <div class="week-lbl">J 1–2</div>
+                <div class="week-content"><strong>Concepts de base</strong><span class="wtag wt-th">théorie</span><br>init, add, commit, push, pull. Créer ton premier repo GitHub.</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">J 3–4</div>
+                <div class="week-content"><strong>Branches & merge</strong><span class="wtag wt-pr">pratique</span><br>Créer une branche, faire des modifications, merger. Gérer un conflit simple.</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">J 5</div>
+                <div class="week-content"><strong>Mettre tes scripts sur GitHub</strong><span class="wtag wt-pj">projet</span><br>Crée un repo "mes-automatisations" et versionne tes scripts existants avec de bons README.</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Ressources recommandées</div>
+            <div class="resources">
+              <div class="res"><span class="res-ico">🎮</span><div class="res-info"><div class="res-name">Oh My Git! – ohmygit.org</div><div class="res-desc">Un jeu qui enseigne Git visuellement. La façon la plus rapide de comprendre les concepts.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+              <div class="res"><span class="res-ico">📖</span><div class="res-info"><div class="res-name">Git Handbook – GitHub Docs</div><div class="res-desc">La référence officielle. Lire la section "Get started" en entier.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+              <div class="res"><span class="res-ico">🎥</span><div class="res-info"><div class="res-name">"Git and GitHub for Beginners" – freeCodeCamp YouTube</div><div class="res-desc">Tutoriel vidéo d'1h qui couvre tout l'essentiel. Idéal pour voir avant de faire.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+            </div>
+          </div>
+          <div class="tip-box"><strong>💡 Pourquoi c'est non-négociable :</strong> Quand tu interagiras avec des devs, tout passe par Git. Un chef d'équipe qui ne comprend pas Git ne peut pas relire les contributions de son équipe, comprendre l'historique, ou participer à une code review.</div>
+        </div>
+      </div>
+      <div class="mod-footer">
+        <button class="mod-toggle-btn" onclick="toggleBody('p1',1,this)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          Voir le détail
+        </button>
+        <div class="notes-label">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 6h6M5 9h4"/></svg>
+          Notes
+        </div>
+      </div>
+      <div class="notes-section" id="notes-p1-1-wrap" style="display:none">
+        <textarea class="notes-area" id="notes-p1-1" placeholder="Tes notes, questions, liens utiles…" oninput="saveNote('p1',1,this)"></textarea>
+        <div class="notes-saved" id="notes-saved-p1-1">✓ Sauvegardé</div>
+      </div>
+    </div>
+
+    <!-- M3 -->
+    <div class="mod-card" id="mod-p1-2">
+      <div class="mod-card-header">
+        <div class="mod-num">M3</div>
+        <div class="mod-title-wrap">
+          <div class="mod-title">SQL avancé : requêtes complexes & agrégations</div>
+          <div class="mod-subtitle">Tu nettoies déjà de la donnée — le SQL avancé te permet de le faire à l'échelle et de dialoguer avec les data engineers.</div>
+          <div class="mod-chips">
+            <span class="mod-chip mc-dur">3 semaines</span>
+            <span class="mod-chip mc-lvl">Intermédiaire</span>
+            <span class="mod-chip mc-type">Compétence différenciante</span>
+          </div>
+        </div>
+        <button class="mod-check-btn" onclick="toggleMod('p1',2,this)" title="Marquer comme terminé">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l4 4 6-7"/></svg>
+        </button>
+      </div>
+      <div class="mod-body" id="body-p1-2">
+        <div class="mod-body-inner">
+          <div>
+            <div class="slabel">Objectifs concrets</div>
+            <div class="objectives">
+              <div class="obj"><span class="obj-ic">🔗</span>Maîtriser les JOIN (INNER, LEFT, RIGHT, FULL)</div>
+              <div class="obj"><span class="obj-ic">📊</span>GROUP BY, HAVING, fonctions d'agrégation</div>
+              <div class="obj"><span class="obj-ic">🪟</span>Window functions basiques (RANK, LAG, LEAD)</div>
+              <div class="obj"><span class="obj-ic">🔄</span>Sous-requêtes et CTEs (WITH...AS)</div>
+              <div class="obj"><span class="obj-ic">⚡</span>Notions de performance et optimisation</div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Programme semaine par semaine</div>
+            <div class="weeks-table">
+              <div class="week-row">
+                <div class="week-lbl">Sem 1</div>
+                <div class="week-content"><strong>Jointures maîtrisées + agrégations</strong><span class="wtag wt-th">théorie</span><br>Les JOIN sont au cœur de 80% des requêtes complexes. Exercices : croiser des tables clients, commandes, produits.</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">Sem 2</div>
+                <div class="week-content"><strong>Sous-requêtes, CTEs, CASE WHEN</strong><span class="wtag wt-th">théorie</span><br>CTEs (WITH...AS) pour rendre le code lisible. CASE WHEN pour créer des colonnes calculées.</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">Sem 3</div>
+                <div class="week-content"><strong>Window functions + projet réel</strong><span class="wtag wt-pj">projet</span><br>RANK, ROW_NUMBER, LAG/LEAD. Puis : prendre un vrai jeu de données marketing et répondre à 5 questions business en SQL pur.</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Ressources recommandées</div>
+            <div class="resources">
+              <div class="res"><span class="res-ico">📊</span><div class="res-info"><div class="res-name">Mode Analytics SQL Tutorial</div><div class="res-desc">Meilleure ressource gratuite pour le SQL analytique. Très axée cas concrets.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+              <div class="res"><span class="res-ico">🧩</span><div class="res-info"><div class="res-name">SQLZoo – sqlzoo.net</div><div class="res-desc">Exercices interactifs progressifs. Faire les sections JOIN, SUM and COUNT, More JOIN.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+              <div class="res"><span class="res-ico">🏆</span><div class="res-info"><div class="res-name">StrataScratch – stratascratch.com</div><div class="res-desc">Questions SQL réelles posées en entretien chez des boîtes tech. Excellent pour tester son niveau.</div></div><span class="res-tag rt-free">Gratuit (tier limité)</span></div>
+            </div>
+          </div>
+          <div class="tip-box"><strong>💡 Utilisation IA :</strong> Soumets tes requêtes SQL à Claude et demande "optimise cette requête et explique pourquoi ta version est meilleure". C'est l'un des meilleurs cas d'usage : tu vois du code, tu comprends le raisonnement.</div>
+        </div>
+      </div>
+      <div class="mod-footer">
+        <button class="mod-toggle-btn" onclick="toggleBody('p1',2,this)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          Voir le détail
+        </button>
+        <div class="notes-label">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 6h6M5 9h4"/></svg>
+          Notes
+        </div>
+      </div>
+      <div class="notes-section" id="notes-p1-2-wrap" style="display:none">
+        <textarea class="notes-area" id="notes-p1-2" placeholder="Tes notes, questions, liens utiles…" oninput="saveNote('p1',2,this)"></textarea>
+        <div class="notes-saved" id="notes-saved-p1-2">✓ Sauvegardé</div>
+      </div>
+    </div>
+
+    <!-- M4 -->
+    <div class="mod-card" id="mod-p1-3">
+      <div class="mod-card-header">
+        <div class="mod-num">M4</div>
+        <div class="mod-title-wrap">
+          <div class="mod-title">Bases du web : HTML / CSS / JS pour non-développeurs</div>
+          <div class="mod-subtitle">Pas pour coder des sites. Pour comprendre comment une page web fonctionne et parler aux devs frontend avec pertinence.</div>
+          <div class="mod-chips">
+            <span class="mod-chip mc-dur">3 semaines</span>
+            <span class="mod-chip mc-lvl">Débutant</span>
+            <span class="mod-chip mc-type">Culture technique</span>
+          </div>
+        </div>
+        <button class="mod-check-btn" onclick="toggleMod('p1',3,this)" title="Marquer comme terminé">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l4 4 6-7"/></svg>
+        </button>
+      </div>
+      <div class="mod-body" id="body-p1-3">
+        <div class="mod-body-inner">
+          <div>
+            <div class="slabel">Objectifs concrets</div>
+            <div class="objectives">
+              <div class="obj"><span class="obj-ic">🌐</span>Comprendre la structure HTML d'une page</div>
+              <div class="obj"><span class="obj-ic">🎨</span>Lire et modifier du CSS sans paniquer</div>
+              <div class="obj"><span class="obj-ic">⚡</span>Comprendre ce que fait JS (sans l'écrire)</div>
+              <div class="obj"><span class="obj-ic">🔍</span>Utiliser l'inspecteur du navigateur (F12)</div>
+              <div class="obj"><span class="obj-ic">💬</span>Parler de DOM, events, responsive avec des devs</div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Programme semaine par semaine</div>
+            <div class="weeks-table">
+              <div class="week-row">
+                <div class="week-lbl">Sem 1</div>
+                <div class="week-content"><strong>HTML : la structure</strong><span class="wtag wt-th">théorie</span><br>Balises, attributs, DOM. Ouvrir l'inspecteur sur un site du travail et comprendre l'arbre HTML.</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">Sem 2</div>
+                <div class="week-content"><strong>CSS : la mise en forme</strong><span class="wtag wt-th">théorie</span><br>Sélecteurs, box model, flexbox. Modifier le style d'un composant sans casser le reste.</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">Sem 3</div>
+                <div class="week-content"><strong>JavaScript : comprendre la logique</strong><span class="wtag wt-pr">pratique</span><br>Variables, fonctions, events, fetch API. Comprendre "cet élément réagit à un clic et appelle une API".</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Ressources recommandées</div>
+            <div class="resources">
+              <div class="res"><span class="res-ico">⚒️</span><div class="res-info"><div class="res-name">The Odin Project – Foundations</div><div class="res-desc">Parcours complet HTML/CSS/JS. Très pédagogique. Faire les 4 premières sections.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+              <div class="res"><span class="res-ico">📖</span><div class="res-info"><div class="res-name">MDN Web Docs – Mozilla</div><div class="res-desc">LA référence. À utiliser comme dictionnaire quand tu tombes sur quelque chose d'inconnu.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+              <div class="res"><span class="res-ico">🎮</span><div class="res-info"><div class="res-name">CSS Flexbox Froggy + Grid Garden</div><div class="res-desc">Deux jeux pour comprendre flexbox et grid en 30 min. Vraiment efficace.</div></div><span class="res-tag rt-free">Gratuit</span></div>
+            </div>
+          </div>
+          <div class="tip-box"><strong>💡 Exercice concret :</strong> Prends une page web du travail, ouvre l'inspecteur (F12), identifie 3 composants et essaie de comprendre comment ils sont construits. Demande à l'IA d'expliquer les parties qui t'échappent.</div>
+        </div>
+      </div>
+      <div class="mod-footer">
+        <button class="mod-toggle-btn" onclick="toggleBody('p1',3,this)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          Voir le détail
+        </button>
+        <div class="notes-label">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 6h6M5 9h4"/></svg>
+          Notes
+        </div>
+      </div>
+      <div class="notes-section" id="notes-p1-3-wrap" style="display:none">
+        <textarea class="notes-area" id="notes-p1-3" placeholder="Tes notes, questions, liens utiles…" oninput="saveNote('p1',3,this)"></textarea>
+        <div class="notes-saved" id="notes-saved-p1-3">✓ Sauvegardé</div>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="mod-card" id="mod-p1-4">
+      <div class="mod-card-header">
+        <div class="mod-num">M5</div>
+        <div class="mod-title-wrap">
+          <div class="mod-title">Projet pratique : automatiser un vrai flux de données</div>
+          <div class="mod-subtitle">Synthèse de tout ce que tu as appris. Un projet concret, documenté et versionné sur GitHub.</div>
+          <div class="mod-chips">
+            <span class="mod-chip mc-dur">2 semaines</span>
+            <span class="mod-chip mc-lvl">Intermédiaire</span>
+            <span class="mod-chip mc-type">Projet portfolio</span>
+          </div>
+        </div>
+        <button class="mod-check-btn" onclick="toggleMod('p1',4,this)" title="Marquer comme terminé">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8l4 4 6-7"/></svg>
+        </button>
+      </div>
+      <div class="mod-body" id="body-p1-4">
+        <div class="mod-body-inner">
+          <div>
+            <div class="slabel">Idées de projets (choisir 1)</div>
+            <div class="objectives">
+              <div class="obj"><span class="obj-ic">📬</span>Extraire des données d'une API (Mailchimp, HubSpot, GA) → nettoyer → pousser dans Google Sheets</div>
+              <div class="obj"><span class="obj-ic">📊</span>Agréger des CSV avec Pandas et générer un rapport HTML automatique</div>
+              <div class="obj"><span class="obj-ic">🔔</span>Script qui surveille un fichier, détecte des anomalies et envoie une alerte email</div>
+            </div>
+          </div>
+          <div>
+            <div class="slabel">Livrables attendus</div>
+            <div class="weeks-table">
+              <div class="week-row">
+                <div class="week-lbl">Code</div>
+                <div class="week-content">Script Python propre, découpé en fonctions, avec gestion d'erreurs</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">GitHub</div>
+                <div class="week-content">Repo public avec commits clairs et README expliquant le projet</div>
+              </div>
+              <div class="week-row">
+                <div class="week-lbl">Docs</div>
+                <div class="week-content">Court document : problème résolu, architecture, limites et améliorations possibles</div>
+              </div>
+            </div>
+          </div>
+          <div class="tip-box"><strong>💡 Le vrai objectif :</strong> Ce n'est pas le projet en lui-même qui compte, c'est de montrer que tu sais penser, documenter et livrer. Un dev doit comprendre en 2 minutes ce que ça fait et pourquoi tu as fait ces choix — c'est exactement ce que tu attendras de ton équipe.</div>
+        </div>
+      </div>
+      <div class="mod-footer">
+        <button class="mod-toggle-btn" onclick="toggleBody('p1',4,this)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          Voir le détail
+        </button>
+        <div class="notes-label">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 6h6M5 9h4"/></svg>
+          Notes
+        </div>
+      </div>
+      <div class="notes-section" id="notes-p1-4-wrap" style="display:none">
+        <textarea class="notes-area" id="notes-p1-4" placeholder="Tes notes, questions, liens utiles…" oninput="saveNote('p1',4,this)"></textarea>
+        <div class="notes-saved" id="notes-saved-p1-4">✓ Sauvegardé</div>
+      </div>
+    </div>
+
+  </div><!-- /modules-list -->
+
+  <!-- Checklist Phase 1 -->
+  <div class="checklist-section">
+    <div class="checklist-card">
+      <h3>✅ Checklist de validation – Phase 1</h3>
+      <p>Coche chaque critère quand tu te sens vraiment à l'aise — pas quand tu as "fini" la ressource.</p>
+      <div class="check-list">
+        <div class="check-item" onclick="toggleCheck(this,'cl-p1-0')"><div class="check-box">✓</div><div class="check-text">Je peux écrire une classe Python simple et expliquer pourquoi c'est utile</div></div>
+        <div class="check-item" onclick="toggleCheck(this,'cl-p1-1')"><div class="check-box">✓</div><div class="check-text">J'ai au moins 1 repo GitHub public avec un vrai README</div></div>
+        <div class="check-item" onclick="toggleCheck(this,'cl-p1-2')"><div class="check-box">✓</div><div class="check-text">Je peux écrire une requête SQL avec JOIN, GROUP BY et une sous-requête</div></div>
+        <div class="check-item" onclick="toggleCheck(this,'cl-p1-3')"><div class="check-box">✓</div><div class="check-text">Je comprends ce que je vois dans l'inspecteur du navigateur (DOM, CSS)</div></div>
+        <div class="check-item" onclick="toggleCheck(this,'cl-p1-4')"><div class="check-box">✓</div><div class="check-text">J'ai livré un projet d'automatisation complet, documenté et versionné</div></div>
+        <div class="check-item" onclick="toggleCheck(this,'cl-p1-5')"><div class="check-box">✓</div><div class="check-text">Je peux expliquer mon code à quelqu'un d'autre sans me perdre</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /view-phase1 -->
+
+
+<!-- ════════════════════════════════════════════════
+     VIEW: PHASE 2 (squelette — à développer)
+════════════════════════════════════════════════ -->
+<div class="view" id="view-phase2">
+  <nav class="topnav">
+    <button class="nav-back" onclick="navigate('home')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>
+      Retour
+    </button>
+    <div class="nav-breadcrumb">
+      <span>Formation</span><span class="nav-sep"> › </span><span>Phase 2 — Compétences techniques</span>
+    </div>
+  </nav>
+  <div class="phase-hero" data-num="02">
+    <div class="phase-hero-inner">
+      <div class="phase-hero-tag">Phase 2 · Mois 4–7 · Compétences techniques</div>
+      <h1>Monter en <em>compétences techniques</em></h1>
+      <p>APIs, données avancées, architecture applicative et un premier mini-outil web. Tu commences à parler vraiment le même langage que les ingénieurs.</p>
+      <div class="phase-pills">
+        <span class="pill">⏱ ~16 semaines</span>
+        <span class="pill">2h / semaine</span>
+        <span class="pill">~32h au total</span>
+        <span class="pill">6 modules</span>
+      </div>
+    </div>
+  </div>
+  <div class="coming-soon">
+    <div class="coming-soon-box">
+      <div class="cs-icon">🚧</div>
+      <h2>Contenu en cours de construction</h2>
+      <p>Le détail de la Phase 2 sera ajouté à notre prochaine session. Les modules couvriront : APIs REST, Pandas avancé, No-code/Low-code, Architecture applicative, Dataviz, et un mini-outil web avec Streamlit.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     VIEW: PHASE 3 (squelette)
+════════════════════════════════════════════════ -->
+<div class="view" id="view-phase3">
+  <nav class="topnav">
+    <button class="nav-back" onclick="navigate('home')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>
+      Retour
+    </button>
+    <div class="nav-breadcrumb">
+      <span>Formation</span><span class="nav-sep"> › </span><span>Phase 3 — Leadership technique</span>
+    </div>
+  </nav>
+  <div class="phase-hero" data-num="03">
+    <div class="phase-hero-inner">
+      <div class="phase-hero-tag">Phase 3 · Mois 8–10 · Leadership technique</div>
+      <h1>Posture de <em>leader technique</em></h1>
+      <p>La technicité seule ne suffit pas. Cette phase te prépare à cadrer des projets tech, prioriser intelligemment et créer une dynamique d'équipe productive.</p>
+      <div class="phase-pills">
+        <span class="pill">⏱ ~10 semaines</span>
+        <span class="pill">2h / semaine</span>
+        <span class="pill">~20h au total</span>
+        <span class="pill">4 modules</span>
+      </div>
+    </div>
+  </div>
+  <div class="coming-soon">
+    <div class="coming-soon-box">
+      <div class="cs-icon">🔒</div>
+      <h2>Contenu disponible en Phase 3</h2>
+      <p>Ce contenu sera détaillé quand tu approcheras des mois 8–10. Les modules couvriront : Agile/Scrum, Specs techniques & user stories, Management & feedback, Sécurité & RGPD.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     VIEW: PHASE 4 (squelette)
+════════════════════════════════════════════════ -->
+<div class="view" id="view-phase4">
+  <nav class="topnav">
+    <button class="nav-back" onclick="navigate('home')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>
+      Retour
+    </button>
+    <div class="nav-breadcrumb">
+      <span>Formation</span><span class="nav-sep"> › </span><span>Phase 4 — Positionnement</span>
+    </div>
+  </nav>
+  <div class="phase-hero" data-num="04">
+    <div class="phase-hero-inner">
+      <div class="phase-hero-tag">Phase 4 · Mois 11–12 · Positionnement</div>
+      <h1>Intégrer, consolider <em>et se positionner</em></h1>
+      <p>L'heure du bilan. Tu crées des preuves tangibles de ta progression et tu travailles ta visibilité pour décrocher le rôle visé.</p>
+      <div class="phase-pills">
+        <span class="pill">⏱ ~8 semaines</span>
+        <span class="pill">2h / semaine</span>
+        <span class="pill">~16h au total</span>
+        <span class="pill">4 modules</span>
+      </div>
+    </div>
+  </div>
+  <div class="coming-soon">
+    <div class="coming-soon-box">
+      <div class="cs-icon">🎯</div>
+      <h2>Contenu disponible en Phase 4</h2>
+      <p>Le sprint final. Portfolio GitHub, réseau ciblé, CV repositionné et projet capstone de bout en bout — ton meilleur argument en entretien.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════ -->
+<script>
+const SK = 'formation_v1';
+
+// ── Data structure ──────────────────────────────
+const PHASES = {
+  p1: { total: 5, view: 'phase1', label: 'Phase 1' },
+  p2: { total: 6, view: 'phase2', label: 'Phase 2' },
+  p3: { total: 4, view: 'phase3', label: 'Phase 3' },
+  p4: { total: 4, view: 'phase4', label: 'Phase 4' }
+};
+
+const MODULE_NAMES = {
+  p1: ['Python solide', 'Git & GitHub', 'SQL avancé', 'Bases du web', 'Projet pratique'],
+  p2: ['APIs REST', 'Pandas avancé', 'No-code / Low-code', 'Architecture', 'Dataviz', 'Mini-outil web'],
+  p3: ['Agile / Scrum', 'Specs techniques', 'Management & feedback', 'Sécurité & RGPD'],
+  p4: ['Portfolio GitHub', 'Veille & réseau', 'CV repositionné', 'Projet capstone']
+};
+
+// ── State ────────────────────────────────────────
+let state = { done: {}, checks: {}, notes: {} };
+
+function loadState() {
+  try { state = JSON.parse(localStorage.getItem(SK)) || { done: {}, checks: {}, notes: {} }; } catch(e) {}
+  if (!state.done) state.done = {};
+  if (!state.checks) state.checks = {};
+  if (!state.notes) state.notes = {};
+}
+
+function saveState() {
+  localStorage.setItem(SK, JSON.stringify(state));
+}
+
+// ── Navigation ───────────────────────────────────
+function navigate(target) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + target).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ── Module toggle ─────────────────────────────────
+function toggleMod(phase, idx, btn) {
+  const key = phase + '-' + idx;
+  const card = document.getElementById('mod-' + phase + '-' + idx);
+  state.done[key] = !state.done[key];
+  card.classList.toggle('mod-done', state.done[key]);
+  saveState();
+  updateAllProgress();
+}
+
+// ── Body accordion ────────────────────────────────
+function toggleBody(phase, idx, btn) {
+  const body = document.getElementById('body-' + phase + '-' + idx);
+  const notesWrap = document.getElementById('notes-' + phase + '-' + idx + '-wrap');
+  const isOpen = body.classList.toggle('open');
+  btn.querySelector('svg').style.transform = isOpen ? 'rotate(180deg)' : '';
+  btn.innerHTML = isOpen
+    ? `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg> Réduire`
+    : `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg> Voir le détail`;
+  if (notesWrap) notesWrap.style.display = isOpen ? 'block' : 'none';
+  // Load note
+  if (isOpen) {
+    const ta = document.getElementById('notes-' + phase + '-' + idx);
+    if (ta) ta.value = state.notes[phase + '-' + idx] || '';
+  }
+}
+
+// ── Notes ─────────────────────────────────────────
+let noteTimers = {};
+function saveNote(phase, idx, ta) {
+  const key = phase + '-' + idx;
+  state.notes[key] = ta.value;
+  saveState();
+  clearTimeout(noteTimers[key]);
+  const indicator = document.getElementById('notes-saved-' + phase + '-' + idx);
+  if (indicator) {
+    noteTimers[key] = setTimeout(() => {
+      indicator.classList.add('show');
+      setTimeout(() => indicator.classList.remove('show'), 1500);
+    }, 600);
+  }
+}
+
+// ── Checklist items ────────────────────────────────
+function toggleCheck(el, key) {
+  state.checks[key] = !state.checks[key];
+  el.classList.toggle('ci-done', state.checks[key]);
+  saveState();
+}
+
+// ── Progress update ───────────────────────────────
+function updateAllProgress() {
+  let totalDone = 0, totalAll = 0;
+
+  Object.entries(PHASES).forEach(([phase, cfg]) => {
+    let done = 0;
+    for (let i = 0; i < cfg.total; i++) {
+      if (state.done[phase + '-' + i]) done++;
+      // Update mod card state
+      const card = document.getElementById('mod-' + phase + '-' + i);
+      if (card) card.classList.toggle('mod-done', !!state.done[phase + '-' + i]);
+    }
+    totalDone += done;
+    totalAll += cfg.total;
+
+    const pct = cfg.total > 0 ? Math.round((done / cfg.total) * 100) : 0;
+
+    // Mini bar on homepage
+    const miniFill = document.getElementById('mini-' + phase);
+    const miniPct = document.getElementById('mini-pct-' + phase);
+    if (miniFill) miniFill.style.width = pct + '%';
+    if (miniPct) miniPct.textContent = pct + '%';
+
+    // Phase card status
+    const homeCard = document.getElementById('home-' + phase);
+    if (homeCard) {
+      homeCard.classList.remove('status-active', 'status-done');
+      if (done === cfg.total && cfg.total > 0) homeCard.classList.add('status-done');
+      else if (done > 0) homeCard.classList.add('status-active');
+    }
+
+    // Phase detail bar
+    const pFill = document.getElementById(phase.replace('p', 'p') + '-fill');
+    const pPct = document.getElementById(phase.replace('p', 'p') + '-pct');
+    if (pFill) pFill.style.width = pct + '%';
+    if (pPct) pPct.textContent = done + ' / ' + cfg.total + ' modules';
+
+    // Chips on homepage
+    updateChips(phase, cfg, done);
+  });
+
+  // Global bar
+  const gpct = totalAll > 0 ? Math.round((totalDone / totalAll) * 100) : 0;
+  const hFill = document.getElementById('home-prog-fill');
+  const hPct = document.getElementById('home-pct');
+  if (hFill) hFill.style.width = gpct + '%';
+  if (hPct) hPct.textContent = gpct + '%';
+
+  const doneCount = document.getElementById('home-done-count');
+  if (doneCount) doneCount.textContent = totalDone;
+}
+
+function updateChips(phase, cfg, done) {
+  const container = document.getElementById('chips-' + phase);
+  if (!container) return;
+  container.innerHTML = '';
+  const names = MODULE_NAMES[phase] || [];
+  names.forEach((name, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'module-chip' + (state.done[phase + '-' + i] ? ' done' : '');
+    chip.textContent = name;
+    container.appendChild(chip);
+  });
+}
+
+// ── Restore checklist state ────────────────────────
+function restoreChecks() {
+  document.querySelectorAll('.check-item[onclick]').forEach(el => {
+    const match = el.getAttribute('onclick').match(/'([^']+)'\)$/);
+    if (match) {
+      const key = match[1];
+      if (state.checks[key]) el.classList.add('ci-done');
+    }
+  });
+}
+
+// ── Reset ─────────────────────────────────────────
+function resetAll() {
+  if (confirm('Réinitialiser toute ta progression (modules, checklists, notes) ?')) {
+    state = { done: {}, checks: {}, notes: {} };
+    saveState();
+    location.reload();
+  }
+}
+
+// ── Init ──────────────────────────────────────────
+loadState();
+updateAllProgress();
+restoreChecks();
+</script>
+</body>
+</html>
